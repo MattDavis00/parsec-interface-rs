@@ -236,6 +236,17 @@ impl fmt::Display for AuthType {
     }
 }
 
+impl TryFrom<u8> for AuthType {
+    type Error = ResponseStatus;
+
+    fn try_from(auth_type: u8) -> ::std::result::Result<Self, Self::Error> {
+        match num::FromPrimitive::from_u8(auth_type) {
+            Some(auth_type) => Ok(auth_type),
+            None => Err(ResponseStatus::AuthenticatorDoesNotExist),
+        }
+    }
+}
+
 #[test]
 fn check_opcode_nature() {
     assert!(Opcode::ListKeys.is_core());
